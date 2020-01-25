@@ -42,7 +42,7 @@ int main(int argc, const char *argv[])
 
     /* MAIN LOOP OVER ALL IMAGES */
 
-    for (size_t imgIndex = 0; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
+    for (size_t imgIndex = imgStartIndex; imgIndex <= imgEndIndex - imgStartIndex; imgIndex++)
     {
         /* LOAD IMAGE INTO BUFFER */
 
@@ -62,6 +62,11 @@ int main(int argc, const char *argv[])
         // push image into data frame buffer
         DataFrame frame;
         frame.cameraImg = imgGray;
+
+        // depending on if the maximum data buffer size is reached, remove the oldest image
+        if(dataBuffer.size() >= dataBufferSize)
+            dataBuffer.erase(dataBuffer.begin());
+
         dataBuffer.push_back(frame);
 
         //// EOF STUDENT ASSIGNMENT
