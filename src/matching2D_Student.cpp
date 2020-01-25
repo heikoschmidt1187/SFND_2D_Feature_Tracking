@@ -195,7 +195,18 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         windowName = "FAST Keypoint Detector Results";
 
     } else if (detectorType.compare("BRISK") == 0) {
-        // TODO
+
+        // create detector
+        detector = cv::BRISK::create();
+
+        // detect keypoints
+        double t = (double)cv::getTickCount();
+        detector->detect(img, keypoints);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << "BRISK detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+        windowName = "BRISK Keypoint Detector Results";
+
     } else if (detectorType.compare("ORB") == 0) {
         // TODO
     } else if (detectorType.compare("AKAZE") == 0) {
