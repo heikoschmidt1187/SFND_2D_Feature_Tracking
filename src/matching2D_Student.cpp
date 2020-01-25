@@ -101,3 +101,27 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
         cv::waitKey(0);
     }
 }
+
+// Detect keypoints in image using the traditional Harris detector
+void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)
+{
+
+}
+
+// Detect keypoints in image using modern detectors FAST, BRISK, ORB, AKAZE or SIFT
+void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
+{
+    if (detectorType.compare("FAST") == 0) {
+        // TODO
+    } else if (detectorType.compare("BRISK") == 0) {
+        // TODO
+    } else if (detectorType.compare("ORB") == 0) {
+        // TODO
+    } else if (detectorType.compare("AKAZE") == 0) {
+        // TODO
+    } else if (detectorType.compare("SIFT") == 0) {
+        // TODO
+    } else {
+        cout << "Error: Unknown detector type " << detectorType << " configured" << endl;
+    }
+}
