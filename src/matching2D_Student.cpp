@@ -11,26 +11,32 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
     bool crossCheck = false;
     cv::Ptr<cv::DescriptorMatcher> matcher;
 
-    if (matcherType.compare("MAT_BF") == 0)
-    {
+    if (matcherType.compare("MAT_BF") == 0) {
         int normType = cv::NORM_HAMMING;
         matcher = cv::BFMatcher::create(normType, crossCheck);
-    }
-    else if (matcherType.compare("MAT_FLANN") == 0)
-    {
-        // ...
+    } else if (matcherType.compare("MAT_FLANN") == 0) {
+
+        if(descSource.type() != CV_32F) {
+            descSource.convertTo(descSource, CV_32F);
+            descRef.convertTo(descRef, CV_32F);
+        }
+        
+        matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+    } else {
+        cout << "Unknown matcher type " << matcherType << endl;
+        return;
     }
 
     // perform matching task
-    if (selectorType.compare("SEL_NN") == 0)
-    { // nearest neighbor (best match)
+    if (selectorType.compare("SEL_NN") == 0) {
+        // nearest neighbor (best match)
 
         matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
-    }
-    else if (selectorType.compare("SEL_KNN") == 0)
-    { // k nearest neighbors (k=2)
-
-        // ...
+    } else if (selectorType.compare("SEL_KNN") == 0) {
+        // k nearest neighbors (k=2)
+    } else {
+        cout << "Unknown selector type " << selectorType << endl;
+        return;
     }
 }
 
