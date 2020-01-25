@@ -175,7 +175,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
 {
     // the feature detector pointer
     cv::Ptr<cv::FeatureDetector> detector = nullptr;
-    std::string windowName;
+    std::string windowName = detectorType + " Keypoint Detector Results";
 
     if (detectorType.compare("FAST") == 0) {
 
@@ -186,69 +186,36 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
         cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;
         detector = cv::FastFeatureDetector::create(threshold, true, type);
 
-        // detect keypoints
-        double t = (double)cv::getTickCount();
-        detector->detect(img, keypoints);
-        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << "FAST detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-        windowName = "FAST Keypoint Detector Results";
-
     } else if (detectorType.compare("BRISK") == 0) {
 
         // create detector
         detector = cv::BRISK::create();
-
-        // detect keypoints
-        double t = (double)cv::getTickCount();
-        detector->detect(img, keypoints);
-        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << "BRISK detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-        windowName = "BRISK Keypoint Detector Results";
 
     } else if (detectorType.compare("ORB") == 0) {
 
         // create detector
         detector = cv::ORB::create();
 
-        // detect keypoints
-        double t = (double)cv::getTickCount();
-        detector->detect(img, keypoints);
-        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << "ORB detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-        windowName = "ORB Keypoint Detector Results";
-
     } else if (detectorType.compare("AKAZE") == 0) {
 
         // create detector
         detector = cv::AKAZE::create();
-
-        // detect keypoints
-        double t = (double)cv::getTickCount();
-        detector->detect(img, keypoints);
-        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << "AKAZE detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-        windowName = "AKAZE Keypoint Detector Results";
 
     } else if (detectorType.compare("SIFT") == 0) {
 
         // create detector
         detector = cv::xfeatures2d::SIFT::create();
 
-        // detect keypoints
-        double t = (double)cv::getTickCount();
-        detector->detect(img, keypoints);
-        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
-        cout << "SIFT detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
-
-        windowName = "SIFT Keypoint Detector Results";
-
     } else {
         cout << "Error: Unknown detector type " << detectorType << " configured" << endl;
+        return;
     }
+
+    // detect keypoints
+    double t = (double)cv::getTickCount();
+    detector->detect(img, keypoints);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << detectorType << " detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
     // visualize results
     VisualizeKeypoints(bVis, img, keypoints, windowName);
