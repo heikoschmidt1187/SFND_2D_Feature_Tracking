@@ -3,8 +3,6 @@
 
 using namespace std;
 
-static void VisualizeKeypoints(bool bVis, cv::Mat &img, std::vector<cv::KeyPoint> &keypoints, std::string windowName);
-
 // Find best matches for keypoints in two camera images based on several matching methods
 void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::KeyPoint> &kPtsRef, cv::Mat &descSource, cv::Mat &descRef,
                       std::vector<cv::DMatch> &matches, std::string descriptorType, std::string matcherType, std::string selectorType)
@@ -93,7 +91,7 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
     cout << "Shi-Tomasi detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
     // visualize results
-    VisualizeKeypoints(bVis, img, keypoints, "Shi-Tomasi Corner Detector Results");
+    VisualizeKeypoints(img, keypoints, "Shi-Tomasi Corner Detector Results", bVis);
 }
 
 
@@ -167,7 +165,7 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
     cout << "Harris detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
     // visualize results
-    VisualizeKeypoints(bVis, img, keypoints, "Harris Corner Detector Results");
+    VisualizeKeypoints(img, keypoints, "Harris Corner Detector Results", bVis);
 }
 
 // Detect keypoints in image using modern detectors FAST, BRISK, ORB, AKAZE or SIFT
@@ -218,10 +216,10 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     cout << detectorType << " detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
 
     // visualize results
-    VisualizeKeypoints(bVis, img, keypoints, windowName);
+    VisualizeKeypoints(img, keypoints, windowName, bVis);
 }
 
-void VisualizeKeypoints(bool bVis, cv::Mat &img, std::vector<cv::KeyPoint> &keypoints, std::string windowName)
+void VisualizeKeypoints(cv::Mat &img, std::vector<cv::KeyPoint> &keypoints, std::string windowName, bool bVis)
 {
     if (bVis) {
         cv::Mat visImage = img.clone();

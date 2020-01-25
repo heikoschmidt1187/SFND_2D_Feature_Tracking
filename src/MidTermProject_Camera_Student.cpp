@@ -76,18 +76,18 @@ int main(int argc, const char *argv[])
 
         // extract 2D keypoints from current image
         vector<cv::KeyPoint> keypoints; // create empty feature list for current image
-        string detectorType = "AKAZE";
+        string detectorType = "SHITOMASI";
 
         //// STUDENT ASSIGNMENT
         //// TASK MP.2 -> add the following keypoint detectors in file matching2D.cpp and enable string-based selection based on detectorType
         //// -> HARRIS, FAST, BRISK, ORB, AKAZE, SIFT
 
         if (detectorType.compare("SHITOMASI") == 0) {
-            detKeypointsShiTomasi(keypoints, imgGray, true);
+            detKeypointsShiTomasi(keypoints, imgGray, false);
         } else if (detectorType.compare("HARRIS") == 0) {
-            detKeypointsHarris(keypoints, imgGray, true);
+            detKeypointsHarris(keypoints, imgGray, false);
         } else {
-            detKeypointsModern(keypoints, imgGray, detectorType, true);
+            detKeypointsModern(keypoints, imgGray, detectorType, false);
         }
         //// EOF STUDENT ASSIGNMENT
 
@@ -97,9 +97,24 @@ int main(int argc, const char *argv[])
         // only keep keypoints on the preceding vehicle
         bool bFocusOnVehicle = true;
         cv::Rect vehicleRect(535, 180, 180, 150);
-        if (bFocusOnVehicle)
-        {
-            // ...
+        if (bFocusOnVehicle) {
+
+            auto it = keypoints.begin();
+
+            // loop over all keypoints
+            while(it != keypoints.end()) {
+
+                // check if the keypoint lies in the vehicleRect and remove if not
+                if(vehicleRect.contains(it->pt))
+                    ++it;
+                else
+                    it = keypoints.erase(it);
+            }
+
+            cout << "Number of keypoints after ROI adaption: " << keypoints.size() << endl;
+
+            // show reduced keypoints
+            VisualizeKeypoints(imgGray, keypoints, "ROI Reduced Keypoints Result");
         }
 
         //// EOF STUDENT ASSIGNMENT
