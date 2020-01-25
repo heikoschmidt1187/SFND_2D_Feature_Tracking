@@ -39,10 +39,10 @@ See the classroom instruction and code comments for more details on each of thes
 
 In the following sections will explain how all the [Rubric](https://review.udacity.com/#!/rubrics/2549/view) points have been solved.
 
-### TASK MP.0 - Mid-Term Report
+### Task MP.0 - Mid-Term Report
 You're reading it! ;-)
 
-### TASK MP.1 - Data Buffer Optimization
+### Task MP.1 - Data Buffer Optimization
 The data buffer has been optimized to just hold the last n data elements for processing. The number n can be configured by setting the variable *dataBufferSize* accordingly. You can find the implementation in MidTermProject_Camera_Student.cpp:
 
 ```c++
@@ -64,7 +64,7 @@ dataBuffer.push_back(frame);
 
 The std::vector is filled up until it's size reaches the configured threshold. From that, before adding any new elements, the first and oldest element is removed. This handling is called ring buffer.
 
-### TASK MP.2 - Keypoint Detection
+### Task MP.2 - Keypoint Detection
 The keypoint detection variants can be selected by setting the string variable *detectorType* to one of the following values:
 
 * SHITOMASI - Shi-Tomasi "good features to track"
@@ -261,4 +261,184 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     VisualizeKeypoints(img, keypoints, windowName, bVis);
 }
 ```
-To be continued
+
+### Task MP.3 - Keypoint Removal
+In real life systems, all keypoints are valuable and important to ensure nothing is overseen by collision avoidance systems in cars. To enable a more targeted evaluation of the different detector/descriptor combinations though, concentration is focused on the vehicle directly in front, so all keypoints outside of a specific region of interest (ROI) are discarded, making use of the *cv::Rectangle* type with it's *contains* member function. You can find the implementation in MidTermProject_Camera_Student.cpp:
+
+```c++
+//// TASK MP.3 -> only keep keypoints on the preceding vehicle
+
+// only keep keypoints on the preceding vehicle
+bool bFocusOnVehicle = true;
+cv::Rect vehicleRect(535, 180, 180, 150);
+if (bFocusOnVehicle) {
+
+    auto it = keypoints.begin();
+
+    // loop over all keypoints
+    while(it != keypoints.end()) {
+
+        // check if the keypoint lies in the vehicleRect and remove if not
+        if(vehicleRect.contains(it->pt))
+            ++it;
+        else
+            it = keypoints.erase(it);
+    }
+
+    cout << "Number of keypoints after ROI adaption: " << keypoints.size() << endl;
+
+    // show reduced keypoints
+    VisualizeKeypoints(imgGray, keypoints, "ROI Reduced Keypoints Result");
+}
+
+//// EOF STUDENT ASSIGNMENT
+```
+
+### Task MP.4 - Keypoint Descriptors
+For keypoint description, like for keypoint detection, multiple algorithms have been implemented, selectable by setting sepcific strings in MidTermProject_Camera_Student.cpp:
+
+* BRISK - **B**inary **R**obust **I**nvariant **S**calable **K**eypoints Descriptor
+* BRIEF - **B**inary **R**obust **I**ndependent **E**lementary **F**eatures
+* ORB - **O**riented FAST and **R**otated **B**RIEF Descriptor
+* FREAK - **F**ast **Re**tin**a** **K**eypoints Descriptor
+* AKAZE
+* SIFT - **S**cale **I**nvariant **F**eature **T**ransform Descriptor
+
+```c++
+//// STUDENT ASSIGNMENT
+//// TASK MP.4 -> add the following descriptors in file matching2D.cpp and enable string-based selection based on descriptorType
+//// -> BRIEF, ORB, FREAK, AKAZE, SIFT
+
+cv::Mat descriptors;
+string descriptorType = "BRISK"; // BRISK, BRIEF, ORB, FREAK, AKAZE, SIFT
+descKeypoints((dataBuffer.end() - 1)->keypoints, (dataBuffer.end() - 1)->cameraImg, descriptors, descriptorType);
+//// EOF STUDENT ASSIGNMENT
+```
+
+Like with the modern detectors, the descriptors are handled in one common function in  the matching2D_Student.cpp file. It again uses the cv::Ptr template pointer type. All parameters have been reused from the lesson's exercises:
+
+```c++
+// Use one of several types of state-of-art descriptors to uniquely identify keypoints
+void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
+{
+    // select appropriate descriptor
+    cv::Ptr<cv::DescriptorExtractor> extractor;
+    if (descriptorType.compare("BRISK") == 0) {
+
+        int threshold = 30;        // FAST/AGAST detection threshold score.
+        int octaves = 3;           // detection octaves (use 0 to do single scale)
+        float patternScale = 1.0f; // apply this scale to the pattern used for sampling the neighbourhood of a keypoint.
+
+        extractor = cv::BRISK::create(threshold, octaves, patternScale);
+
+    } else if (descriptorType.compare("BRIEF") == 0) {
+        extractor = cv::xfeatures2d::BriefDescriptorExtractor::create();
+    } else if (descriptorType.compare("ORB") == 0) {
+        extractor = cv::ORB::create();
+    } else if (descriptorType.compare("FREAK") == 0) {
+        extractor = cv::xfeatures2d::FREAK::create();
+    } else if (descriptorType.compare("AKAZE") == 0) {
+        extractor = cv::AKAZE::create();
+    } else if (descriptorType.compare("SIFT") == 0) {
+        extractor = cv::xfeatures2d::SIFT::create();
+    } else {
+        cout << "Unknown descriptor type " << descriptorType << endl;
+        return;
+    }
+
+    // perform feature description
+    double t = (double)cv::getTickCount();
+    extractor->compute(img, keypoints, descriptors);
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    cout << descriptorType << " descriptor extraction in " << 1000 * t / 1.0 << " ms" << endl;
+}
+```
+
+### Task MP.5/6 - Descriptor Matching/Descriptor Distance Ratio
+The tasks 5 and 6 are solved in the *matchDescriptors* function, called from the MidTermProject_Camera_Student.cpp source file:
+
+```c++
+//// STUDENT ASSIGNMENT
+//// TASK MP.5 -> add FLANN matching in file matching2D.cpp
+//// TASK MP.6 -> add KNN match selection and perform descriptor distance ratio filtering with t=0.8 in file matching2D.cpp
+
+matchDescriptors((dataBuffer.end() - 2)->keypoints, (dataBuffer.end() - 1)->keypoints,
+                 (dataBuffer.end() - 2)->descriptors, (dataBuffer.end() - 1)->descriptors,
+                 matches, descriptorType, matcherType, selectorType);
+
+//// EOF STUDENT ASSIGNMENT
+```
+
+The operation is implemented in matching2D_Student.cpp. The matcher to use can be selected with the matcherType string:
+
+* MAT_BF - Brute Force Matcher
+* MAT_FLANN - **F**ast **L**ibrary for **A**pproximate **N**earest **N**eighbors
+
+For the FLANN matcher type, the current OpenCV version may have problems if the descriptor source is not of type CV_32F, so a workaround has been implemented by converting the values - slowing down the processing a little. Also, the template pointer cv::Ptr has been used again:
+
+```c++
+// configure matcher
+bool crossCheck = false;
+cv::Ptr<cv::DescriptorMatcher> matcher;
+
+if (matcherType.compare("MAT_BF") == 0) {
+    int normType = cv::NORM_HAMMING;
+    matcher = cv::BFMatcher::create(normType, crossCheck);
+} else if (matcherType.compare("MAT_FLANN") == 0) {
+
+    if(descSource.type() != CV_32F) {
+        descSource.convertTo(descSource, CV_32F);
+        descRef.convertTo(descRef, CV_32F);
+    }
+
+    matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
+} else {
+    cout << "Unknown matcher type " << matcherType << endl;
+    return;
+}
+```
+
+Besides the matcher type, the selector type can be selected as well by setting the selectorType variable to one of the following values:
+
+* SEL_NN - Nearest Neighbor
+* SEL_KNN - k Nearest Neighbors
+
+Depending on the activated selector, either only the nearest neighbor is returned, or the k nearest neighbors are retrieved, followed by filtering with a minimum descriptor distance ratio of 0.8:
+
+```c++
+// perform matching task
+if (selectorType.compare("SEL_NN") == 0) {
+    // nearest neighbor (best match)
+
+    matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
+} else if (selectorType.compare("SEL_KNN") == 0) {
+    // k nearest neighbors (k=2)
+    vector<vector<cv::DMatch>> knnMatches;
+    matcher->knnMatch(descSource, descRef, knnMatches, 2);
+
+    // filter min descriptor distance ratio
+    double minDescDistRatio = 0.8;
+    for(auto it = knnMatches.begin(); it != knnMatches.end(); ++it) {
+        if((*it)[0].distance < (minDescDistRatio * (*it)[1].distance))
+            matches.push_back((*it)[0]);
+    }
+
+} else {
+    cout << "Unknown selector type " << selectorType << endl;
+    return;
+}
+```
+
+### Task MP.7 - Performance Evaluation 1
+
+The following table shows the number of keypoints for all of the 10 images depending on the selected keypoint detector - after the ROI adaption to the preceding car:
+
+| Detector | Image 0 | Image 1 | Image 2 | Image 3 | Image 4 | Image 5 | Image 6 | Image 7 | Image 8 | Image 9 | Sum | Avg | Notes |
+| :--- | :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |
+| SHITOMASI |125|118|123|120|120|113|114|123|111|112|1,179|118|Small in Size, evenly distributed at car's backside, found at taillights, numbers plate and in the window where the headrests can be seen, not many at the car's bottom edge|
+| HARRIS |  | | | | | | | | | | | ||
+| FAST |  | | | | | | | | | | | ||
+| BRISK |  | | | | | | | | | | | ||
+| ORB |  | | | | | | | | | | | ||
+| AKAZE |  | | | | | | | | | | | ||
+| SIFT |  | | | | | | | | | | | ||
