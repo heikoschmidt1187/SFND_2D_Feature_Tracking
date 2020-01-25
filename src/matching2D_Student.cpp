@@ -173,8 +173,27 @@ void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool
 // Detect keypoints in image using modern detectors FAST, BRISK, ORB, AKAZE or SIFT
 void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std::string detectorType, bool bVis)
 {
+    // the feature detector pointer
+    cv::Ptr<cv::FeatureDetector> detector = nullptr;
+    std::string windowName;
+
     if (detectorType.compare("FAST") == 0) {
-        // TODO
+
+        // Detector parameters
+        int threshold = 30;     // difference between intensity of central px and px of a circle
+
+        // create detector with NMS usage
+        cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::TYPE_9_16;
+        detector = cv::FastFeatureDetector::create(threshold, true, type);
+
+        // detect keypoints
+        double t = (double)cv::getTickCount();
+        detector->detect(img, keypoints);
+        t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+        cout << "FAST detection with n=" << keypoints.size() << " keypoints in " << 1000 * t / 1.0 << " ms" << endl;
+
+        windowName = "FAST Keypoint Detector Results";
+
     } else if (detectorType.compare("BRISK") == 0) {
         // TODO
     } else if (detectorType.compare("ORB") == 0) {
@@ -186,6 +205,9 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
     } else {
         cout << "Error: Unknown detector type " << detectorType << " configured" << endl;
     }
+
+    // visualize results
+    VisualizeKeypoints(bVis, img, keypoints, windowName);
 }
 
 void VisualizeKeypoints(bool bVis, cv::Mat &img, std::vector<cv::KeyPoint> &keypoints, std::string windowName)
