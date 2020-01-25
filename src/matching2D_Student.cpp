@@ -20,7 +20,7 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
             descSource.convertTo(descSource, CV_32F);
             descRef.convertTo(descRef, CV_32F);
         }
-        
+
         matcher = cv::DescriptorMatcher::create(cv::DescriptorMatcher::FLANNBASED);
     } else {
         cout << "Unknown matcher type " << matcherType << endl;
@@ -34,6 +34,16 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         matcher->match(descSource, descRef, matches); // Finds the best match for each descriptor in desc1
     } else if (selectorType.compare("SEL_KNN") == 0) {
         // k nearest neighbors (k=2)
+        vector<vector<cv::DMatch>> knnMatches;
+        matcher->knnMatch(descSource, descRef, knnMatches, 2);
+
+        // filter min descriptor distance ratio
+        double minDescDistRatio = 0.8;
+        for(auto it = knnMatches.begin(); it != knnMatches.end(); ++it) {
+            if((*it)[0].distance < (minDescDistRatio * (*it)[1].distance))
+                matches.push_back((*it)[0]);
+        }
+
     } else {
         cout << "Unknown selector type " << selectorType << endl;
         return;
