@@ -433,12 +433,56 @@ if (selectorType.compare("SEL_NN") == 0) {
 
 The following table shows the number of keypoints for all of the 10 images depending on the selected keypoint detector - after the ROI adaption to the preceding car:
 
-| Detector | Image 0 | Image 1 | Image 2 | Image 3 | Image 4 | Image 5 | Image 6 | Image 7 | Image 8 | Image 9 | Sum | Avg | Notes |
-| :--- | :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |
-| SHITOMASI |125|118|123|120|120|113|114|123|111|112|1,179|118|Small in Size, evenly distributed at car's backside, found at taillights, numbers plate and in the window where the headrests can be seen, not many at the car's bottom edge|
-| HARRIS |  | | | | | | | | | | | ||
-| FAST |  | | | | | | | | | | | ||
-| BRISK |  | | | | | | | | | | | ||
-| ORB |  | | | | | | | | | | | ||
-| AKAZE |  | | | | | | | | | | | ||
-| SIFT |  | | | | | | | | | | | ||
+| Detector | Image 0 | Image 1 | Image 2 | Image 3 | Image 4 | Image 5 | Image 6 | Image 7 | Image 8 | Image 9 | Sum | Avg |
+| :--- | :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |
+| SHITOMASI |125|118|123|120|120|113|114|123|111|112|**1,179**|**118**|
+| HARRIS |17|14|18|21|26|43|18|31|26|24|**238**|**24**|
+| FAST |149|152|150|155|149|149|156|150|138|143|**1,491**|**149**|
+| BRISK |264|282|282|277|297|279|289|272|266|254|**2,762**|**276**|
+| ORB |92|102|106|113|109|125|130|129|127|128|**1,161**|**161**|
+| AKAZE |166|157|161|155|163|164|173|175|177|179|**1,670**|**167**|
+| SIFT |138|132|124|137|134|140|137|148|159|137|**1,386**|**139**|
+
+Notes according to the size, neighborhood and distribution of the keypoints:
+
+TODO: example images for each detector !!!
+
+* **SHITOMASI**
+ * small in size (fixed keypoint size)
+ * evenly distributed at car's backside
+ * found keypoints at taillights, license plate and in the window where the headrests can be seen, not many at the car's back's bottom edge
+* **HARRIS**
+ * small in size (fixed keypoint size)
+ * not as evenly distributed as in Shi-Tomasi
+ * not as constant from frame to frame as in Shi-Tomasi
+ * less points than in Shi-Tomasi
+ * mainly located at taillights, middle breaking light, antenna
+ * not so much clustered regarding it's neighbors
+ * some outliers of the car at the edge of the ROI (cars in front of the target)
+* **FAST**
+ * bigger in size than the above two
+ * many keypoints found
+ * mainly located at the edges of the car, along the sides and the roof
+ * some keypoints also spread at the back of the preceding car
+ * outliers/false positives on the ground (lane markings) and other cars in front
+ * clustered along with other keypoints
+* **BRISK**
+ * different in size and orientation depending on the detection
+ * many keypoints found, much more than the above mentioned detectors
+ * mainly located at the edges of the car, along the sides and the roof
+ * some keypoints also spread at the back of the preceding car
+ * the keypoints are clustered together very much
+* **ORB**
+ * different in size and orientation depending on the detection
+ * many keypoints found, comparable to Shi-Tomasi
+ * keypoints clustered at taillights and contour of the preceding car
+ * outliers/false positives at other cars in front
+* **AKAZE**
+ * different in size and orientation depending on the detection, smaller than FAST
+ * many keypoints found, comparable to FAST
+ * keypoints clustered at taillights and contour of the preceding car
+ * outliers/false positives at other cars in front
+* **SIFT**
+ * very different in size
+ * mainly clustered at the car's contour edges, taillights and license plate
+ * many false positive, below the car but mainly at other cars in front of the preceding car
