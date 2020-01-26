@@ -445,44 +445,75 @@ The following table shows the number of keypoints for all of the 10 images depen
 
 Notes according to the size, neighborhood and distribution of the keypoints:
 
-TODO: example images for each detector !!!
+#### SHITOMASI
+<img src="images/shitomasi.png" width="auto" height="248" />
 
-* **SHITOMASI**
- * small in size (fixed keypoint size)
- * evenly distributed at car's backside
- * found keypoints at taillights, license plate and in the window where the headrests can be seen, not many at the car's back's bottom edge
-* **HARRIS**
- * small in size (fixed keypoint size)
- * not as evenly distributed as in Shi-Tomasi
- * not as constant from frame to frame as in Shi-Tomasi
- * less points than in Shi-Tomasi
- * mainly located at taillights, middle breaking light, antenna
- * not so much clustered regarding it's neighbors
- * some outliers of the car at the edge of the ROI (cars in front of the target)
-* **FAST**
- * bigger in size than the above two
- * many keypoints found
- * mainly located at the edges of the car, along the sides and the roof
- * some keypoints also spread at the back of the preceding car
- * outliers/false positives on the ground (lane markings) and other cars in front
- * clustered along with other keypoints
-* **BRISK**
- * different in size and orientation depending on the detection
- * many keypoints found, much more than the above mentioned detectors
- * mainly located at the edges of the car, along the sides and the roof
- * some keypoints also spread at the back of the preceding car
- * the keypoints are clustered together very much
-* **ORB**
- * different in size and orientation depending on the detection
- * many keypoints found, comparable to Shi-Tomasi
- * keypoints clustered at taillights and contour of the preceding car
- * outliers/false positives at other cars in front
-* **AKAZE**
- * different in size and orientation depending on the detection, smaller than FAST
- * many keypoints found, comparable to FAST
- * keypoints clustered at taillights and contour of the preceding car
- * outliers/false positives at other cars in front
-* **SIFT**
- * very different in size
- * mainly clustered at the car's contour edges, taillights and license plate
- * many false positive, below the car but mainly at other cars in front of the preceding car
+* small in size (fixed keypoint size)
+* evenly distributed at car's backside
+* found keypoints at taillights, license plate and in the window where the headrests can be seen, not many at the car's back's bottom edge
+
+#### HARRIS
+<img src="images/harris.png" width="auto" height="248" />
+
+* small in size (fixed keypoint size)
+* not as evenly distributed as in Shi-Tomasi
+* not as constant from frame to frame as in Shi-Tomasi
+* less points than in Shi-Tomasi
+* mainly located at taillights, middle breaking light, antenna
+* not so much clustered regarding it's neighbors
+* some outliers of the car at the edge of the ROI (cars in front of the target)
+
+#### FAST
+<img src="images/fast.png" width="auto" height="248" />
+* bigger in size than the above two
+* many keypoints found
+* mainly located at the edges of the car, along the sides and the roof
+* some keypoints also spread at the back of the preceding car
+* outliers/false positives on the ground (lane markings) and other cars in front
+* clustered along with other keypoints
+
+#### BRISK
+<img src="images/brisk.png" width="auto" height="248" />
+
+* different in size and orientation depending on the detection
+* many keypoints found, much more than the above mentioned detectors
+* mainly located at the edges of the car, along the sides and the roof
+* some keypoints also spread at the back of the preceding car
+* the keypoints are clustered together very much
+
+#### ORB
+<img src="images/orb.png" width="auto" height="248" />
+
+* different in size and orientation depending on the detection
+* many keypoints found, comparable to Shi-Tomasi
+* keypoints clustered at taillights and contour of the preceding car
+* outliers/false positives at other cars in front
+
+#### AKAZE
+<img src="images/akaze.png" width="auto" height="248" />
+
+* different in size and orientation depending on the detection, smaller than FAST
+* many keypoints found, comparable to FAST
+* keypoints clustered at taillights and contour of the preceding car
+* outliers/false positives at other cars in front
+
+#### SIFT
+<img src="images/sift.png" width="auto" height="248" />
+
+* very different in size
+* mainly clustered at the car's contour edges, taillights and license plate
+* many false positive, below the car but mainly at other cars in front of the preceding car
+
+### Task MP.8 - Performance Evaluation 2
+
+The following table shows the sum of matched keypoints in the 10 images on matching for all detector descriptor combinations. For the matching, a brute force approach has been taken (MAT_BF) with the k-nearest neighbor and a minimum descriptor distance ratio of 0.8:
+
+|Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
+|:-|:-|:-|:-|:-|:-|:-|
+|SHITOMASI|767|944|907|768|n/a|n/a -- TODO|
+|HARRIS -- TODO check why different|142|173|160|144|n/a|n/a -- TODO|
+|FAST|899|1,099|1,081|878|n/a|n/a -- TODO|
+|BRISK|1,570|1,704|1,510|1,524|n/a|n/a -- TODO|
+|ORB|751|545|761|420|n/a|n/a -- TODO|
+|AKAZE|1,215|1,266|1,186|1,187|1,259|n/a -- TODO|
+|SIFT|592|702|OutOfMemoryError|593|n/a|n/a -- TODO|
