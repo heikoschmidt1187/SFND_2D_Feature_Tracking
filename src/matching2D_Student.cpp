@@ -48,6 +48,8 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
         cout << "Unknown selector type " << selectorType << endl;
         return;
     }
+
+    cout << "Number of matched keypints: " << matches.size() << endl;
 }
 
 // Use one of several types of state-of-art descriptors to uniquely identify keypoints
@@ -117,8 +119,6 @@ void detKeypointsShiTomasi(vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool b
     // visualize results
     VisualizeKeypoints(img, keypoints, "Shi-Tomasi Corner Detector Results", bVis);
 }
-
-
 
 // Detect keypoints in image using the traditional Harris detector
 void detKeypointsHarris(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, bool bVis)

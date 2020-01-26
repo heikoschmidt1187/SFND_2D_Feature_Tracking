@@ -435,13 +435,13 @@ The following table shows the number of keypoints for all of the 10 images depen
 
 | Detector | Image 0 | Image 1 | Image 2 | Image 3 | Image 4 | Image 5 | Image 6 | Image 7 | Image 8 | Image 9 | Sum | Avg |
 | :--- | :--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |:--- |
-| SHITOMASI |125|118|123|120|120|113|114|123|111|112|**1,179**|**118**|
-| HARRIS |17|14|18|21|26|43|18|31|26|24|**238**|**24**|
-| FAST |149|152|150|155|149|149|156|150|138|143|**1,491**|**149**|
-| BRISK |264|282|282|277|297|279|289|272|266|254|**2,762**|**276**|
-| ORB |92|102|106|113|109|125|130|129|127|128|**1,161**|**161**|
-| AKAZE |166|157|161|155|163|164|173|175|177|179|**1,670**|**167**|
-| SIFT |138|132|124|137|134|140|137|148|159|137|**1,386**|**139**|
+| **SHITOMASI** |125|118|123|120|120|113|114|123|111|112|**1,179**|**118**|
+| **HARRIS** |17|14|18|21|26|43|18|31|26|24|**238**|**24**|
+| **FAST** |149|152|150|155|149|149|156|150|138|143|**1,491**|**149**|
+| **BRISK** |264|282|282|277|297|279|289|272|266|254|**2,762**|**276**|
+| **ORB** |92|102|106|113|109|125|130|129|127|128|**1,161**|**161**|
+| **AKAZE** |166|157|161|155|163|164|173|175|177|179|**1,670**|**167**|
+| **SIFT** |138|132|124|137|134|140|137|148|159|137|**1,386**|**139**|
 
 Notes according to the size, neighborhood and distribution of the keypoints:
 
@@ -510,10 +510,24 @@ The following table shows the sum of matched keypoints in the 10 images on match
 
 |Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
 |:-|:-|:-|:-|:-|:-|:-|
-|SHITOMASI|767|944|907|768|n/a|n/a -- TODO|
-|HARRIS -- TODO check why different|142|173|160|144|n/a|n/a -- TODO|
-|FAST|899|1,099|1,081|878|n/a|n/a -- TODO|
-|BRISK|1,570|1,704|1,510|1,524|n/a|n/a -- TODO|
-|ORB|751|545|761|420|n/a|n/a -- TODO|
-|AKAZE|1,215|1,266|1,186|1,187|1,259|n/a -- TODO|
-|SIFT|592|702|OutOfMemoryError|593|n/a|n/a -- TODO|
+|**SHITOMASI**|767|944|907|768|n/a|n/a -- TODO|
+|**HARRIS** -- TODO check why different|142|173|160|144|n/a|n/a -- TODO|
+|**FAST**|899|1,099|1,081|878|n/a|n/a -- TODO|
+|**BRISK**|1,570|1,704|1,510|1,524|n/a|n/a -- TODO|
+|**ORB**|751|545|761|420|n/a|n/a -- TODO|
+|**AKAZE**|1,215|1,266|1,186|1,187|1,259|n/a -- TODO|
+|**SIFT**|592|702|OutOfMemoryError|593|n/a|n/a -- TODO|
+
+### Task MP.9 - Performance Evaluation 3
+
+In the table below the average time in milliseconds for keypoints detection and matching is listed for each detector and descriptor combination. Both times have been summed up and averaged:
+
+|Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
+|:-|:-|:-|:-|:-|:-|:-|
+|**SHITOMASI**|14.512|14.154|16.336|35.482|n/a|n/a -- TODO|
+|**HARRIS** -- TODO check why different|15.661|15.345|17.569|36.603|n/a|n/a -- TODO|
+|**FAST**|2.51|1.61|3.705|26.72|n/a|n/a -- TODO|
+|**BRISK**|37.9|35.075|44.201|59.918|n/a|n/a -- TODO|
+|**ORB**|7.273|11.045|15.819|31.78|n/a|n/a -- TODO|
+|**AKAZE**|59.506|55.579|63.317|77.554|100.67|n/a -- TODO|
+|**SIFT**|99.579|102.269|OutOfMemoryError|126.687|n/a|n/a -- TODO|
