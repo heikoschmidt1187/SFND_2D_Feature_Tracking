@@ -510,13 +510,13 @@ The following table shows the sum of matched keypoints in the 10 images on match
 
 |Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
 |:-|:-|:-|:-|:-|:-|:-|
-|**SHITOMASI**|767|944|907|768|n/a|n/a -- TODO|
-|**HARRIS** -- TODO check why different|142|173|160|144|n/a|n/a -- TODO|
-|**FAST**|899|1,099|1,081|878|n/a|n/a -- TODO|
-|**BRISK**|1,570|1,704|1,510|1,524|n/a|n/a -- TODO|
-|**ORB**|751|545|761|420|n/a|n/a -- TODO|
-|**AKAZE**|1,215|1,266|1,186|1,187|1,259|n/a -- TODO|
-|**SIFT**|592|702|OutOfMemoryError|593|n/a|n/a -- TODO|
+|**SHITOMASI**|767|944|907|768|n/a|927|
+|**HARRIS** -- TODO check why different|142|173|160|144|n/a|163|
+|**FAST**|899|1,099|1,081|878|n/a|1,046|
+|**BRISK**|1,570|1,704|1,510|1,524|n/a|1,646|
+|**ORB**|751|545|761|420|n/a|763|
+|**AKAZE**|1,215|1,266|1,186|1,187|1,259|1,270|
+|**SIFT**|592|702|OutOfMemoryError|593|n/a|800|
 
 ### Task MP.9 - Performance Evaluation 3
 
@@ -524,10 +524,10 @@ In the table below the average time in milliseconds for keypoints detection and 
 
 |Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
 |:-|:-|:-|:-|:-|:-|:-|
-|**SHITOMASI**|14.512|14.154|16.336|35.482|n/a|n/a -- TODO|
-|**HARRIS** -- TODO check why different|15.661|15.345|17.569|36.603|n/a|n/a -- TODO|
-|**FAST**|2.51|1.61|3.705|26.72|n/a|n/a -- TODO|
-|**BRISK**|37.9|35.075|44.201|59.918|n/a|n/a -- TODO|
-|**ORB**|7.273|11.045|15.819|31.78|n/a|n/a -- TODO|
-|**AKAZE**|59.506|55.579|63.317|77.554|100.67|n/a -- TODO|
-|**SIFT**|99.579|102.269|OutOfMemoryError|126.687|n/a|n/a -- TODO|
+|**SHITOMASI**|14.512|14.154|16.336|35.482|n/a|24.333|
+|**HARRIS** -- TODO check why different|15.661|15.345|17.569|36.603|n/a|33.75|
+|**FAST**|2.51|1.61|3.705|26.72|n/a|19.233|
+|**BRISK**|37.9|35.075|44.201|59.918|n/a|61.552|
+|**ORB**|7.273|11.045|15.819|31.78|n/a|37.482|
+|**AKAZE**|59.506|55.579|63.317|77.554|100.67|72.627|
+|**SIFT**|99.579|102.269|OutOfMemoryError|126.687|n/a|157.337|
