@@ -382,7 +382,7 @@ bool crossCheck = false;
 cv::Ptr<cv::DescriptorMatcher> matcher;
 
 if (matcherType.compare("MAT_BF") == 0) {
-    int normType = cv::NORM_HAMMING;
+    int normType = (descriptorType.compare("DES_BINARY") == 0) ? cv::NORM_HAMMING : cv::NORM_L2;
     matcher = cv::BFMatcher::create(normType, crossCheck);
 } else if (matcherType.compare("MAT_FLANN") == 0) {
 
@@ -511,7 +511,7 @@ The following table shows the sum of matched keypoints in the 10 images on match
 |Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
 |:-|:-|:-|:-|:-|:-|:-|
 |**SHITOMASI**|767|944|907|768|n/a|927|
-|**HARRIS** -- TODO check why different|142|173|160|144|n/a|163|
+|**HARRIS**|142|173|160|144|n/a|163|
 |**FAST**|899|1,099|1,081|878|n/a|1,046|
 |**BRISK**|1,570|1,704|1,510|1,524|n/a|1,646|
 |**ORB**|751|545|761|420|n/a|763|
@@ -525,9 +525,19 @@ In the table below the average time in milliseconds for keypoints detection and 
 |Detector/Descriptor|BRISK|BRIEF|ORB|FREAK|AKAZE|SIFT|
 |:-|:-|:-|:-|:-|:-|:-|
 |**SHITOMASI**|14.512|14.154|16.336|35.482|n/a|24.333|
-|**HARRIS** -- TODO check why different|15.661|15.345|17.569|36.603|n/a|33.75|
+|**HARRIS**|15.661|15.345|17.569|36.603|n/a|33.75|
 |**FAST**|2.51|1.61|3.705|26.72|n/a|19.233|
 |**BRISK**|37.9|35.075|44.201|59.918|n/a|61.552|
 |**ORB**|7.273|11.045|15.819|31.78|n/a|37.482|
 |**AKAZE**|59.506|55.579|63.317|77.554|100.67|72.627|
 |**SIFT**|99.579|102.269|OutOfMemoryError|126.687|n/a|157.337|
+
+The top three detector descriptor combinations are the following:
+
+|Detector/Descriptor|Keypoint Count|Time|
+|:-|:-|:-|
+|FAST+BRIEF|1,099|1.61ms|
+|FAST+ORB|1,081|3.705ms|
+|FAST+BRISK|899|2.51ms|
+
+The three combinations have been selected as the best compromise between the number of keypoint matches for further processing and the calculation time to make the algorithm usable in realtime applications. FAST+ORB has been placed as second variant in the top three list as it has more keypoints than FAST+BRISK, even though it's slower in computation. The decision also has to take into account the specific hardware setup and timing conditions of the overall system when implementing a real world system.
